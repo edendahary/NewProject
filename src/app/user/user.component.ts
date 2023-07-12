@@ -13,12 +13,13 @@ export class UserComponent {
   }
 
   register(){
+    console.log("here")
     let bodyData = {
       "name": this.name,
       "address": this.address,
       "phone": this.phone,
     }
-    this.http.post("http://localhost:27017/app/createuser",bodyData).subscribe((resultData: any)=>{
+    this.http.post("http://localhost:8000/app/createuser",bodyData).subscribe((resultData: any)=>{
       console.log(resultData)
     })
   }
