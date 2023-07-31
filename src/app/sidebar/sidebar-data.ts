@@ -5,7 +5,7 @@ export const sidebarData = [
         label: 'Dashboard'
     },
      {
-        routeLink: 'statistics',
+        routeLink: 'analyze',
         icon: 'fal fa-chart-bar',
         label: 'Statistics'
     }
