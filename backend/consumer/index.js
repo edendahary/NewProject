@@ -18,7 +18,7 @@ consumer
     consumer.subscribe(["test"]);
     consumer.consume();
   })
-  .on("data", function (data) {
+  .on("data", async function (data) {
     const message = eventType.fromBuffer(data.value);
     console.log(`received message: ${message}`);
 
@@ -30,6 +30,23 @@ consumer
           "Message successfully sent to Elasticsearch:",
           response.data
         );
+
+        // // Delete all documents from the "logs" index
+        // axios
+        //   .post("http://localhost:9200/logs/_delete_by_query", {
+        //     query: {
+        //       match_all: {},
+        //     },
+        //   })
+        //   .then((deleteResponse) => {
+        //     console.log(`${deleteResponse.data.deleted} documents deleted.`);
+        //   })
+        //   .catch((deleteError) => {
+        //     console.error(
+        //       "Error deleting data from Elasticsearch:",
+        //       deleteError.message
+        //     );
+        //   });
       })
       .catch((error) => {
         console.error("Error sending message to Elasticsearch:", error.message);

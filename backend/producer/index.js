@@ -29,6 +29,11 @@ function queueRandomMessage(file) {
       Title_HD: jsonObject.Title_HD,
       RA: jsonObject.RA,
       DEC: jsonObject.DEC,
+      date: jsonObject.date,
+      priority: jsonObject.priority,
+      telescope: jsonObject.telescope,
+      event: jsonObject.event,
+
     };
 
     const success = stream.write(eventType.toBuffer(event));

@@ -15,5 +15,21 @@ module.exports = avro.Type.forSchema({
       name: "DEC",
       type: "string",
     },
+    {
+      name: "date",
+      type: "string",
+    },
+    {
+      name: "priority",
+      type: "int",
+    },
+    {
+      name: "telescope",
+      type: "string",
+    },
+    {
+      name: "event",
+      type: "string",
+    },
   ],
 });

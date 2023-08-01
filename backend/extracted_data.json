@@ -1,5 +1,9 @@
 {
-  "DEC": "-43:23:41.00",
-  "RA": "00:50:03.70",
-  "Title_HD": "A9-F0"
+  "DEC": "-08:54:22.00",
+  "RA": "01:10:12.00",
+  "Title_HD": "K0III",
+  "date": "2018-06-10T01:26:15.925Z",
+  "priority": 2,
+  "telescope": "Thirty Meter Telescope",
+  "event": "X-Ray Rise"
 }
