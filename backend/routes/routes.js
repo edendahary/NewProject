@@ -34,16 +34,30 @@ router.get("/get-nasa-details", async (req, res) => {
 });
 
 
-router.get("/getsimulator", async (req, res) => {
-  await axios
-    .get("http://localhost:9200/logs/_search")
-    .then((response) => {
-      console.log("Message successfully sent to Elasticsearch:", response.data);
+
+
+  router.get("/getsimulator", async (req, res) => {
+
+    const response = await axios.get(
+      `http://localhost:9200/logs/_count`
+    );
+    var totalCount = response.data.count;
+    if (totalCount >= 200){
+      totalCount = 200;
+    }
+      try {
+        const response = await axios.get(
+          `http://localhost:9200/logs/_search?size=${totalCount}`
+        );
+        console.log(
+          "Message successfully sent to Elasticsearch:",
+          response.data
+        );
         res.status(200).json({ value: response.data });
-    })
-    .catch((error) => {
-      console.error("Error sending message to Elasticsearch:", error.message);
-    });
+      } catch (error) {
+        console.error("Error sending message to Elasticsearch:", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+      }
 });
 
 

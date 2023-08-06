@@ -4,7 +4,7 @@ const queueRandomMessage = require("./producer/index");
 const cheerio = require("cheerio");
 const axios = require("axios");
 
-// -------------------- for web-scraping -------------------- 
+// -------------------- for web-scraping --------------------
 const url = "https://theskylive.com/sun-info";
 
 // Function to fetch the HTML content of the URL
@@ -13,27 +13,41 @@ async function fetchHTML(url) {
     const response = await axios.get(url);
     return response.data;
   } catch (error) {
-    console.error('Error fetching HTML:', error);
+    console.error("Error fetching HTML:", error);
     return null;
   }
 }
 
 // Function to clean up the extracted data
 function cleanUpText(text) {
-  return text.replace(/\t+/g, '\t').replace(/\n+/g, '\n').trim();
+  return text.replace(/\t+/g, "\t").replace(/\n+/g, "\n").trim();
 }
 
 // Function to parse the HTML and extract relevant data
-function parseHTML(html) {
+async function parseHTML(html) {
   const $ = cheerio.load(html);
 
   // Extracting data from the classes "rise", "transit", "set", and "currentstate"
   const sunData = {
-    rise: cleanUpText($('.rise').text()),
-    transit: cleanUpText($('.transit').text()),
-    set: cleanUpText($('.set').text()),
-    currentState: cleanUpText($('.currentstate').text())
+    rise: cleanUpText($(".rise").text()),
+    transit: cleanUpText($(".transit").text()),
+    set: cleanUpText($(".set").text()),
+    currentState: cleanUpText($(".currentstate").text()),
   };
+
+  // Add web scraping logic to extract images from the class "content"
+  const images = [];
+  $(".content img").each((index, element) => {
+    const src = $(element).attr("src");
+    if (src) {
+      if (!src.includes("https")) {
+        images.push("https://theskylive.com/" + src);
+      }
+    }
+  });
+  images.pop();
+
+  sunData.images = images;
 
   return sunData;
 }
@@ -47,7 +61,7 @@ async function getSunDetails() {
   }
 }
 
-// -------------------- nasa API for Asteroids that are near to Earth -------------------- 
+// -------------------- nasa API for Asteroids that are near to Earth --------------------
 
 const nasa_url = "https://api.nasa.gov/neo/rest/v1/feed";
 const apiKey = "rUa8liI9NS6MNV6uuiEmUbJRoMdOSQHHbOHLubVB";
@@ -106,11 +120,8 @@ async function getAsteroidsNearEarth() {
   return null;
 }
 
-
-
 async function writeToKafka(randomObject) {
   try {
-
     const { DEC, RA, "Title HD": TitleHD } = randomObject;
     const arrayTelescopes = [
       "MMT",
@@ -148,7 +159,6 @@ async function writeToKafka(randomObject) {
       priority: randomPriority,
       telescope: randomTelescope,
       event: randomEvent,
-
     };
     // Write the JSON object to a file
     const filePath = path.join(__dirname, "extracted_data.json");

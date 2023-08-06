@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const Redis = require("ioredis");
 const simulator = require("./simulator");
 const axios = require("axios");
+const path = require("path");
+const fs = require("fs");
 
 
 app.listen(8000, () => console.log("Server is running on port 8000"));
@@ -28,40 +30,46 @@ client.on("error", function (err) {
 client.on("connect", async function () {
   console.log("Redis connected");
 
-  let cursor = "0";
-  let randomKey = null;
+  async function processRandomObject() {
+    let cursor = "0";
+    let randomKey = null;
 
-  while (randomKey === null) {
-    const [nextCursor, keys] = await client.scan(cursor, "COUNT", 9600);
+    while (randomKey === null) {
+      const [nextCursor, keys] = await client.scan(cursor, "COUNT", 9600);
 
-    if (keys.length === 0) {
-      console.log("No objects found in the Redis database.");
-      return null;
+      if (keys.length === 0) {
+        console.log("No objects found in the Redis database.");
+        return null;
+      }
+
+      // Pick a random key from the available keys
+      randomKey = keys[Math.floor(Math.random() * keys.length)];
+
+      // If nextCursor is 0, it means we have iterated through all the keys.
+      if (nextCursor === "0") break;
+
+      cursor = nextCursor;
     }
 
-    // Pick a random key from the available keys
-    randomKey = keys[Math.floor(Math.random() * keys.length)];
+    if (randomKey === null) {
+      return;
+    }
 
-    // If nextCursor is 0, it means we have iterated through all the keys.
-    if (nextCursor === "0") break;
+    // Get the object corresponding to the random key
+    const randomObjectString = await client.get(randomKey);
 
-    cursor = nextCursor;
+    // Parse the JSON string to obtain the object
+    const randomObject = JSON.parse(randomObjectString);
+
+    const sendKafka = await simulator.writeToKafka(randomObject);
   }
-  if (randomKey === null) {
-    return;
-  }
-  // Get the object corresponding to the random key
-  const randomObjectString = await client.get(randomKey);
 
-  // Parse the JSON string to obtain the object
-  const randomObject = JSON.parse(randomObjectString);
-
-  const sendKafka = await simulator.writeToKafka(randomObject);
-  client.quit();
+  // Run the function initially and then repeat it every 5 seconds
+  // setInterval(processRandomObject, 5000);
 });
 
 
-// used only once to upload the file to Redis
+// // used only once to upload the file to Redis
 // client.on("connect", async function () {
 //   console.log("Redis connected");
 
