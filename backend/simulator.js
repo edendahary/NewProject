@@ -35,6 +35,8 @@ async function parseHTML(html) {
     currentState: cleanUpText($(".currentstate").text()),
   };
 
+  
+
   // Add web scraping logic to extract images from the class "content"
   const images = [];
   $(".content img").each((index, element) => {
@@ -48,6 +50,31 @@ async function parseHTML(html) {
   images.pop();
 
   sunData.images = images;
+var Sun_Physical_Data = []
+  const objectdataElement = $('.objectdata');
+
+  // Split the text content into lines and process each line
+
+  const textContent = objectdataElement.text();
+  const data =cleanUpText(textContent)
+
+  const lines = data.split('\n\t\n\t\n\t');
+
+// Process each group of data
+lines.forEach(group => {
+  const groupLines = group.split('\n\t');
+  const parameter = groupLines[0];
+  const value = groupLines[1];
+  const relativeToEarth = groupLines[2];
+  let sun_obj={parameter:parameter,value:value,relativeToEarth:relativeToEarth}
+  if(Sun_Physical_Data.length < 7 ){
+  Sun_Physical_Data.push(sun_obj)
+}
+
+});
+sunData.Sun_Physical_Data= Sun_Physical_Data;
+
+
 
   return sunData;
 }
@@ -101,21 +128,21 @@ async function getAsteroidsNearEarth() {
   if (neoData) {
     // Extracting the names of the asteroids
     const asteroids = neoData.near_earth_objects;
-    const asteroidNames = [];
+    // const asteroidNames = [];
 
     // Loop through each date in the near_earth_objects object
-    for (const date in asteroids) {
-      if (Object.hasOwnProperty.call(asteroids, date)) {
-        const asteroidsOnDate = asteroids[date];
+    // for (const date in asteroids) {
+    //   if (Object.hasOwnProperty.call(asteroids, date)) {
+    //     const asteroidsOnDate = asteroids[date];
 
-        // Loop through each asteroid on the date and get its name
-        for (const asteroid of asteroidsOnDate) {
-          asteroidNames.push(asteroid.name);
-        }
-      }
-    }
+    //     // Loop through each asteroid on the date and get its name
+    //     for (const asteroid of asteroidsOnDate) {
+    //       asteroidNames.push(asteroid.name);
+    //     }
+    //   }
+    // }
 
-    return asteroidNames;
+    return asteroids;
   }
   return null;
 }

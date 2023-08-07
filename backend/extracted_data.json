@@ -1,9 +1,9 @@
 {
-  "DEC": "-50:21:33.00",
-  "RA": "06:18:46.80",
-  "Title_HD": "G2Ib",
-  "date": "1997-02-15T00:17:33.507Z",
-  "priority": 3,
-  "telescope": "Keck 1 and 2",
+  "DEC": "-32:59:40.00",
+  "RA": "13:51:49.60",
+  "Title_HD": "B5III",
+  "date": "1980-09-07T15:02:26.053Z",
+  "priority": 1,
+  "telescope": "Subaru Telescope",
   "event": "Apparent Brightness Rise"
 }

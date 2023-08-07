@@ -1,0 +1,41 @@
+
+.simulator-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .simulator-table th,
+  .simulator-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .simulator-table thead th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .simulator-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+input[type="text"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+
+
+  .card {
+    width: 100%;
+    margin-bottom: 20px; /* Add spacing between cards */
+  }
+  
+  .image-container {
+    width: 100%; /* Set the width to 100% to match the card */
+  }
+  
+  .image-fill {
+    width: 100%; /* Set the image width to fill the image-container */
+    height: auto;
+  }

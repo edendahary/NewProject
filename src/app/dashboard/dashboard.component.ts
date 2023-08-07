@@ -1,6 +1,8 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
-import axios from 'axios';
+import { SunInfoService } from '../sun-info.service';
+import axios, { all } from 'axios';
+
 Chart.register(...registerables);
 
 @Component({
@@ -8,24 +10,74 @@ Chart.register(...registerables);
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements AfterViewInit {
-  ngAfterViewInit(): void {
-    this.RenderChart('bar', 'EVENTS');
-    this.RenderChart('scatter', 'ASTEROIDS');
-    this.RenderChartSun(); // Call the function for Sun radiation chart
-    this.RenderChartNEO(); // Call the function for NEO chart
-    this.getDataFromServer(); // Call the function to fetch data from the server
+export class DashboardComponent implements OnInit, AfterViewInit {
+  sunspotImageUrl!: string | null;
+  sunspotImageUrl1!: string | null;
+  sunspotImageUrl2!: string | null;
+
+  constructor(private sunInfoService: SunInfoService) {} // Inject the SunInfoService
+  async ngOnInit() {
+    this.allData = await this.getDataFromServer();
+    this.getSunspotImage();
   }
+  arrSimulatorValues: any[] = [];
+  allData: any ;
+  filteredArrSimulatorValues: any[] = []; // Initialize filteredArrSimulatorValues as an empty array
+  // Inside DashboardComponent class
+  searchText: string = '';
+  selectedColumn: string = 'All'; // Default to 'all' for searching in all columns
+
+
+  
+
+  async ngAfterViewInit() {
+    // this.RenderChart('bar', 'EVENTS');
+    // this.RenderChart('scatter', 'ASTEROIDS');
+    this.filteredArrSimulatorValues = this.arrSimulatorValues;
+
+    
+    
+    // Fetch data from the server and wait for the response
+    const data = await this.getDataFromServer();
+    if (data) {
+      // Assuming you have extracted the relevant data from the getDataFromServer() response
+      const sunData = data.sunData;
+      const sunLabels = ['1 hour ago', '1.5 hours ago', '1 hour ago', '0.5 hours ago', '30 mins ago', 'Current'];
+      // this.RenderChartSun(sunData, sunLabels);
+
+      const nasaData = data.nasaData;
+      const nasaLabels = ['0-4 hours', '4-8 hours', '8-12 hours', '12-16 hours', '16-20 hours', '20-24 hours'];
+      // this.RenderChartNEO(nasaData, nasaLabels);
+    }
+  }
+
+  async getSunspotImage() {
+    try {
+      // Fetch the sunspot image URL from the service
+      // const response = await this.sunInfoService.getSunspotImage().toPromise();    
+      console.log(this.allData) 
+      const response = this.allData.sunData.value.images;
+      this.sunspotImageUrl = response[0];
+      this.sunspotImageUrl1 = response[1];
+      this.sunspotImageUrl2 = response[2];
+    } catch (error) {
+      console.error('Error fetching sunspot image:', error);
+      this.sunspotImageUrl = null;
+    }
+  }
+
+  
 
   async getDataFromServer() {
     try {
       const responseNasa = await axios.get("http://localhost:8000/app/get-nasa-details");
       const nasaDetailsValues = responseNasa.data;
-      console.log(nasaDetailsValues.value);
+      // console.log(nasaDetailsValues.value);
 
       const responseSun = await axios.get("http://localhost:8000/app/get-sun-details");
       const sunDetailsValues = responseSun.data;
-      console.log(sunDetailsValues);
+      // console.log(sunDetailsValues);
+
       let arrSimulatorValues = [];
       const responseSimulator = await axios.get("http://localhost:8000/app/getsimulator");
       const simulatorDetailsValues = responseSimulator.data.value;
@@ -34,21 +86,30 @@ export class DashboardComponent implements AfterViewInit {
           arrSimulatorValues.push(item._source);
         }
       }
+      this.arrSimulatorValues = arrSimulatorValues;
+      this.filteredArrSimulatorValues = arrSimulatorValues;
       console.log(arrSimulatorValues);
+      // Return the extracted data as an object
+      return {
+        nasaData: nasaDetailsValues.value,
+        sunData: sunDetailsValues,
+      };
     } catch (error: any) {
-    console.error("Error fetching data:", error.message);
+      console.error("Error fetching data:", error.message);
+      return null; // Return null in case of an error
+    }
   }
-  }
+  
 
   
 
 
   
 
-  RenderChartSun() {
+  RenderChartSun(sunData: number[], sunLabels: string[]) {
     // Replace this example data with your actual data for Sun radiation (Last 2 hours)
-    const sunData = [0.5, 0.8, 1.2, 0.9, 1.5, 1.7]; // Example data for radiation levels
-    const sunLabels = ['1 hour ago', '1.5 hours ago', '1 hour ago', '0.5 hours ago', '30 mins ago', 'Current']; // Example labels for time intervals
+    // const sunData = [0.5, 0.8, 1.2, 0.9, 1.5, 1.7]; // Example data for radiation levels
+    // const sunLabels = ['1 hour ago', '1.5 hours ago', '1 hour ago', '0.5 hours ago', '30 mins ago', 'Current']; // Example labels for time intervals
   
     const sunChart = new Chart('SUN', {
       type: 'line', // Use line chart for Sun radiation data
@@ -82,10 +143,10 @@ export class DashboardComponent implements AfterViewInit {
     });
   }
 
-  RenderChartNEO() {
+  RenderChartNEO(neoData: number[], neoLabels: string[]) {
     // Replace this example data with your actual data for NEOs in the last 24 hours
-    const neoData = [3, 2, 6, 1, 4, 5]; // Example data for NEO occurrences
-    const neoLabels = ['0-4 hours', '4-8 hours', '8-12 hours', '12-16 hours', '16-20 hours', '20-24 hours']; // Example labels for time intervals
+    // const neoData = [3, 2, 6, 1, 4, 5]; // Example data for NEO occurrences
+    // const neoLabels = ['0-4 hours', '4-8 hours', '8-12 hours', '12-16 hours', '16-20 hours', '20-24 hours']; // Example labels for time intervals
   
     const neoChart = new Chart('NEO', {
       type: 'radar', // Use radar chart for NEO data
@@ -114,44 +175,54 @@ export class DashboardComponent implements AfterViewInit {
       }
     });
   }
-  
-  
 
-  RenderChart(type: any, id: any) {
-    const myChart = new Chart(id, {
-      type: type,
-      data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-          label: '# of Votes',
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)', // Red
-            'rgba(54, 162, 235, 0.2)', // Blue
-            'rgba(255, 206, 86, 0.2)', // Yellow
-            'rgba(75, 192, 192, 0.2)', // Green
-            'rgba(153, 102, 255, 0.2)', // Purple
-            'rgba(255, 159, 64, 0.2)', // Orange
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)', // Red
-            'rgba(54, 162, 235, 1)', // Blue
-            'rgba(255, 206, 86, 1)', // Yellow
-            'rgba(75, 192, 192, 1)', // Green
-            'rgba(153, 102, 255, 1)', // Purple
-            'rgba(255, 159, 64, 1)', // Orange
-          ],
-          borderWidth: 1, 
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-
+  onSearch() {
+    // Filter the arrSimulatorValues based on the search text and selected column
+    const searchTerm = this.searchText.toLowerCase();
+    if (this.selectedColumn === 'All') {
+      this.filteredArrSimulatorValues = this.arrSimulatorValues.filter(item =>
+        this.doesItemMatchSearch(item, searchTerm)
+      );
+    } else {
+      this.filteredArrSimulatorValues = this.arrSimulatorValues.filter(item =>
+        this.doesItemMatchSearch(item, searchTerm, this.selectedColumn)
+      );
+    }
   }
-}
+  
+  doesItemMatchSearch(item: any, searchTerm: string, column?: string): boolean | undefined {
+    // Check if the item matches the search term based on the selected column
+    if (column) {
+      switch (column) {
+        case 'Name':
+          return item.Title_HD.toLowerCase().includes(searchTerm);
+        case 'Date':
+          return item.date.toLowerCase().includes(searchTerm);
+        case 'Event':
+          return item.event.toLowerCase().includes(searchTerm);
+        case 'Telescope':
+          return item.telescope.toLowerCase().includes(searchTerm);
+        case 'RA':
+          return item.RA.toLowerCase().includes(searchTerm);
+        case 'DEC':
+          return item.DEC.toLowerCase().includes(searchTerm);
+        case 'Priority':
+          return item.priority.toLowerCase().includes(searchTerm);
+        default:
+          return undefined; // Return undefined when the column is not recognized
+      }
+    } else {
+      // If no column is selected, search in all columns
+      return (
+        item.Title_HD.toLowerCase().includes(searchTerm) ||
+        item.date.toLowerCase().includes(searchTerm) ||
+        item.event.toString().includes(searchTerm) ||
+        item.telescope.toLowerCase().includes(searchTerm) ||
+        item.RA.toLowerCase().includes(searchTerm) ||
+        item.DEC.toLowerCase().includes(searchTerm) ||
+        item.priority.toString().includes(searchTerm)
+      );
+    }
+  }
+  
+  }
