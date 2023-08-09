@@ -34,8 +34,12 @@ async function parseHTML(html) {
     set: cleanUpText($(".set").text()),
     currentState: cleanUpText($(".currentstate").text()),
   };
+  var headlineText ="";
+   $(".object_headline_text").each((index, element) => {
+    headlineText = $(element).text();
+  });
 
-  
+  sunData.headline = headlineText;
 
   // Add web scraping logic to extract images from the class "content"
   const images = [];

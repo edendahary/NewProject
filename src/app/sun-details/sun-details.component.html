@@ -1,0 +1,65 @@
+
+<h1 class="centered-heading">The Sun</h1>
+<div class="card">
+    <p class="paragraph-style">{{this.allData?.sunData?.value?.headline}}</p>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row justify-content-center">
+            <!-- Sunspot Images -->
+            <div class="col-lg-4">
+                <div class="card sunspot-card">
+                    <div class="image-container">
+                        <img [src]="sunspotImageUrl" alt="Sun Image" class="sunspot-image">
+                    </div>
+                    <p class="image-description">Here is a recent image of the Sun's surface showing the current sunspot activity</p>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-4">
+                <div class="card sunspot-card">
+                    <div class="image-container">
+                        <img [src]="sunspotImageUrl1" alt="Sun Image" class="sunspot-image">
+                    </div>
+                    <p class="image-description">Map showing The Sun in Cancer<br>Field of view: 10x6 degrees</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card sunspot-card">
+                    <div class="image-container">
+                        <img [src]="sunspotImageUrl2" alt="Sun Image" class="sunspot-image">
+                        <p class="image-description">Deep sky finder chart for The Sun Field of view: 60x40 arcmins</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-body">
+<h2 class="centered-heading">The Sun Physical Data</h2>
+        <div class="table-container">
+            <table class="simulator-table">
+                <thead class="centered-header">
+                    <tr>
+                        <th>Physical Parameter</th>
+                        <th>Value</th>
+                        <th>Relative to Earth</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of SunValues">
+                        <td>{{ item.parameter }}</td>
+                        <td>{{ item.value }}</td>
+                        <td>{{ item.relativeToEarth }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

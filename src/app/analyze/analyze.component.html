@@ -1,8 +1,43 @@
 <h1>Statistic</h1>
-<div class="card">
-    <div class="card-head">Lorem ipsum - Statistic</div>
-    <div class="card-body">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque, cum culpa? Cum nisi, fugiat doloribus numquam,
-        maxime voluptates expedita dolor culpa quam nostrum quas corporis sit. Adipisci iusto ut deserunt.
-    </div>
+<div>
+  <div class="search-container">
+    <input type="text" placeholder="Search..." [(ngModel)]="searchText" (input)="onSearch()">
+    <select [(ngModel)]="selectedColumn" (change)="onSearch()">
+      <option value="All">All Columns</option>
+      <option value="name">Name</option>
+      <option value="year">Year</option>
+      <option value="absolute_magnitude_h">Absolute Magnitude (H)</option>
+      <!-- Add more options for other columns if needed -->
+    </select>
+  </div>
+  <table class="asteroids-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Year</th>
+        <th>Absolute Magnitude (H)</th>
+        <th>Estimated Diameter (Feet)</th>
+        <th>Estimated Diameter (Kilometers)</th>
+        <th>Estimated Diameter (Meters)</th>
+        <th>Estimated Diameter (Miles)</th>
+        <!-- Add more columns as needed -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let asteroid of asteroidData">
+        <td>{{ asteroid.name }}</td>
+        <td>{{ asteroid.year }}</td>
+        <td>{{ asteroid.absolute_magnitude_h }}</td>
+        <td>{{ asteroid.estimated_diameter.feet.estimated_diameter_min }} - {{ asteroid.estimated_diameter.feet.estimated_diameter_max }}</td>
+        <td>{{ asteroid.estimated_diameter.kilometers.estimated_diameter_min }} - {{ asteroid.estimated_diameter.kilometers.estimated_diameter_max }}</td>
+        <td>{{ asteroid.estimated_diameter.meters.estimated_diameter_min }} - {{ asteroid.estimated_diameter.meters.estimated_diameter_max }}</td>
+        <td>{{ asteroid.estimated_diameter.miles.estimated_diameter_min }} - {{ asteroid.estimated_diameter.miles.estimated_diameter_max }}</td>
+        <!-- Add more columns as needed -->
+      </tr>
+    </tbody>
+  </table>
+  <div class="chart-container">
+    <canvas id="ASTEROIDS"></canvas>
+  </div>
+  
 </div>

@@ -1,86 +1,53 @@
 <h1>Dashboard</h1>
 <div class="card">
-  <div class="card-head">Lorem ipsum - dashboard</div>
   <div class="card-body">
-  <div class="row">
-    <div class="col-lg-6">
-      <h2>Distribution of events (Last week)</h2>
-      <canvas id="EVENTS"></canvas>
-    </div>
-    <div class="col-lg-6">
-      <h2>Distribution of asteroids (Last month)</h2>
-      <canvas id="ASTEROIDS"></canvas>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-6">
-      <h2>Sun radiation (Last 2 hours)</h2>
-      <canvas id="SUN"></canvas>
-      <div class="card">
-          <div class="image-container">
-            <img [src]="sunspotImageUrl" alt="Sunspot Image" class="smaller-image">
-          </div>
-        </div>
-        <div class="card">
+<!-- Search input -->
+<div class="search-container">
+  <input type="text" placeholder="Search..." [(ngModel)]="searchText" (input)="onSearch()">
 
-          <div class="image-container">
-            <img [src]="sunspotImageUrl1" alt="Sunspot Image" class="smaller-image">
-          </div>
-        </div>
-        <div class="card">
-
-        <div class="image-container">
-          <img [src]="sunspotImageUrl2" alt="Sunspot Image" class="smaller-image1">
-        </div>
+      <!-- Column selector dropdown -->
+      <select [(ngModel)]="selectedColumn" (change)="onSearch()">
+        <option value="All">All Columns</option>
+        <option value="Name">Name</option>
+        <option value="Date">Date</option>
+        <option value="Event">Event</option>
+        <option value="Telescope">Telescope</option>
+        <option value="RA">RA</option>
+        <option value="DEC">DEC</option>
+        <option value="Priority">Priority</option>
+        <!-- Add more options for other columns if needed -->
+      </select>
     </div>
 
-    </div>
-  </div>
-
-  <div>
-    
-    <!-- Search input -->
-    <input type="text" placeholder="Search..." [(ngModel)]="searchText" (input)="onSearch()">
-    <!-- Column selector dropdown -->
-    <select [(ngModel)]="selectedColumn" (change)="onSearch()">
-      <option value="All">All Columns</option>
-      <option value="Name">Name</option>
-      <option value="Date">Date</option>
-      <option value="Event">Event</option>
-      <option value="Telescope">Telescope</option>
-      <option value="RA">RA</option>
-      <option value="DEC">DEC</option>
-      <option value="Priority">Priority</option>
-      <!-- Add more options for other columns if needed -->
-    </select>
-  </div>
-  
-  <div>
     <!-- Table to display the simulator values -->
-    <table class="simulator-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Date</th>
-          <th>Event</th>
-          <th>Telescope</th>
-          <th>RA</th>
-          <th>DEC</th>
-          <th>Priority</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of filteredArrSimulatorValues">
-          <td>{{ item.Title_HD }}</td>
-          <td>{{ item.date | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
-          <td>{{ item.event }}</td>
-          <td>{{ item.telescope }}</td>
-          <td>{{ item.RA }}</td>
-          <td>{{ item.DEC }}</td>
-          <td>{{ item.priority }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table class="simulator-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Event</th>
+            <th>Telescope</th>
+            <th>RA</th>
+            <th>DEC</th>
+            <th>Priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredArrSimulatorValues">
+            <td>{{ item.Title_HD }}</td>
+            <td>{{ item.date | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td>{{ item.event }}</td>
+            <td>{{ item.telescope }}</td>
+            <td>{{ item.RA }}</td>
+            <td>{{ item.DEC }}</td>
+            <td>{{ item.priority }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
-</div>
+  </div>
+
+  
+    

@@ -11,6 +11,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AnalyzeComponent } from './analyze/analyze.component';
 import { BodyComponent } from './body/body.component';
+import { SunDetailsComponent } from './sun-details/sun-details.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { BodyComponent } from './body/body.component';
     DashboardComponent,
     AnalyzeComponent,
     BodyComponent,
+    SunDetailsComponent,
 
   ],
   imports: [
@@ -29,7 +31,7 @@ import { BodyComponent } from './body/body.component';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule
-  ],
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

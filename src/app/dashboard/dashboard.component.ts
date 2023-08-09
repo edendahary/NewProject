@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
-import { SunInfoService } from '../sun-info.service';
-import axios, { all } from 'axios';
+import axios from 'axios';
 
 Chart.register(...registerables);
 
@@ -15,10 +14,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   sunspotImageUrl1!: string | null;
   sunspotImageUrl2!: string | null;
 
-  constructor(private sunInfoService: SunInfoService) {} // Inject the SunInfoService
+  selectedDate: Date | undefined; 
+
+  constructor() {} 
   async ngOnInit() {
     this.allData = await this.getDataFromServer();
     this.getSunspotImage();
+
   }
   arrSimulatorValues: any[] = [];
   allData: any ;
@@ -28,7 +30,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   selectedColumn: string = 'All'; // Default to 'all' for searching in all columns
 
 
-  
+  onSearchByDate() {
+    // Filter the data based on the selected date
+    if (this.selectedDate) {
+      this.filteredArrSimulatorValues = this.arrSimulatorValues.filter(
+        (item) => item.date === this.selectedDate
+      );
+    } else {
+      // If no date is selected, show all data
+      this.filteredArrSimulatorValues = this.arrSimulatorValues;
+    }
+  }
 
   async ngAfterViewInit() {
     // this.RenderChart('bar', 'EVENTS');
@@ -54,8 +66,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   async getSunspotImage() {
     try {
       // Fetch the sunspot image URL from the service
-      // const response = await this.sunInfoService.getSunspotImage().toPromise();    
-      console.log(this.allData) 
+      // const response = await this.sunInfoService.getSunspotImage().toPromise();     
       const response = this.allData.sunData.value.images;
       this.sunspotImageUrl = response[0];
       this.sunspotImageUrl1 = response[1];
@@ -72,7 +83,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     try {
       const responseNasa = await axios.get("http://localhost:8000/app/get-nasa-details");
       const nasaDetailsValues = responseNasa.data;
-      // console.log(nasaDetailsValues.value);
+      console.log(nasaDetailsValues.value);
 
       const responseSun = await axios.get("http://localhost:8000/app/get-sun-details");
       const sunDetailsValues = responseSun.data;
@@ -222,7 +233,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         item.DEC.toLowerCase().includes(searchTerm) ||
         item.priority.toString().includes(searchTerm)
       );
-    }
-  }
-  
-  }
+}
+}
+
+}

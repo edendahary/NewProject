@@ -8,5 +8,10 @@ export const sidebarData = [
         routeLink: 'analyze',
         icon: 'fal fa-chart-bar',
         label: 'Statistics'
+    },
+    {
+        routeLink: 'sun-details',
+        icon: 'fal fa-sun',
+        label: 'Sun Details'
     }
 ]
