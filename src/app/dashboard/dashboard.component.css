@@ -17,21 +17,92 @@
 .simulator-table tbody tr:nth-child(even) {
   background-color: #f2f2f2;
 }
-input[type="text"] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
+/* SERACH */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  width: 500px;
 }
 
-/* Styling for the sunspot images */
-.sunspot-card {
-  text-align: center;
-  padding: 10px;
+.search-input {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 5px;
 }
 
-.sunspot-image {
-  width: 100%;
-  height: 100%; /* Set the desired height */
-  object-fit: cover;
+
+.column-dropdown {
+  display: flex;
+  align-items: center;
+  
 }
+
+.column-dropdown label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.column-dropdown select {
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.column-dropdown select:hover {
+  background-color: #f2f2f2;
+}
+
+
+.date-range-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.date-range-picker label {
+  font-weight: bold;
+}
+
+.date-range-picker input {
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.search-button, .clear-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover, .clear-button:hover {
+  background-color: #0056b3;
+}
+
+.date-range-label {
+  font-size: 14px;
+  margin-top: 10px;
+  color: #777;
+}
+
+.centered-heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: antiquewhite;
+  font-size: 4rem;
+
+}
+
+

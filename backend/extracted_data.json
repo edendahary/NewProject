@@ -1,9 +1,9 @@
 {
-  "DEC": "-32:59:40.00",
-  "RA": "13:51:49.60",
-  "Title_HD": "B5III",
-  "date": "1980-09-07T15:02:26.053Z",
-  "priority": 1,
-  "telescope": "Subaru Telescope",
-  "event": "Apparent Brightness Rise"
+  "DEC": "-26:59:12.00",
+  "RA": "23:21:15.50",
+  "Title_HD": "G4V",
+  "date": "1984-02-04T14:28:54.761Z",
+  "priority": 5,
+  "telescope": "Gran Telescopio Canarias",
+  "event": "GRB"
 }

@@ -28,13 +28,13 @@ input[type="text"] {
 .sunspot-card {
   text-align: center;
   padding: 20px;
-  height: 420px;
+  height: 480px;
 }
 
 
 .sunspot-image {
   max-width: 100%;
-  height: 300px; /* Increase the height for bigger images */
+  height: 350px; /* Increase the height for bigger images */
   object-fit: cover;
   border-radius: 10px; /* Slightly round the corners */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -42,14 +42,16 @@ input[type="text"] {
 .centered-heading {
   display: flex;
   justify-content: center;
+  font-size: 4rem;
   align-items: center;
+  color: antiquewhite;
 }
 
 .image-description {
   text-align: center;
-  margin-top: 10px;
-  font-size: 14px;
-  color: #555;
+  margin: 20px 0; /* Increased margin for better separation */
+  font-size: 16px; /* Slightly larger font size */
+  color: #505039; /* A slightly lighter color for readability */
 }
 
 .image-description br {
@@ -61,7 +63,7 @@ input[type="text"] {
   display: block;
   width: 50px;
   height: 2px;
-  background-color: #333;
+  background-color: #d6b7b7;
   margin: 10px auto;
 }
 
@@ -73,12 +75,22 @@ input[type="text"] {
 }
 .paragraph-style {
     font-size: 16px;
-    color: #333;
+    color: white;
     text-align: center;
     margin: 10px 0;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #f7f7f7;
+    background-color: #333;
+    margin-top: 50px;
 }
 
+.sunspot-image {
+  position: relative; /* Ensure relative positioning for the parent container */
+  transition: transform 0.3s, z-index 0.3s; /* Add transition for transform and z-index */
+}
+
+.sunspot-image:hover {
+  transform: scale(2.2); /* Increase the scale (zoom) on hover */
+  z-index: 1; /* Bring the zoomed image above other images on hover */
+}

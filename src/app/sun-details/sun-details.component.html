@@ -1,23 +1,18 @@
 
 <h1 class="centered-heading">The Sun</h1>
-<div class="card">
     <p class="paragraph-style">{{this.allData?.sunData?.value?.headline}}</p>
-</div>
-<div class="card">
-    <div class="card-body">
         <div class="row justify-content-center">
             <!-- Sunspot Images -->
             <div class="col-lg-4">
                 <div class="card sunspot-card">
                     <div class="image-container">
-                        <img [src]="sunspotImageUrl" alt="Sun Image" class="sunspot-image">
+                        <img [src]="sunspotImageUrl" alt="Sun Image" class="sunspot-image"> 
                     </div>
                     <p class="image-description">Here is a recent image of the Sun's surface showing the current sunspot activity</p>
 
                 </div>
             </div>
         </div>
-
         <div class="row justify-content-center">
             <div class="col-lg-4">
                 <div class="card sunspot-card">
@@ -36,13 +31,10 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-
+<h2 style="display: flex; justify-content: center; color: antiquewhite;">The Sun Physical Data</h2>
 <div class="card">
     <div class="card-body">
-<h2 class="centered-heading">The Sun Physical Data</h2>
         <div class="table-container">
             <table class="simulator-table">
                 <thead class="centered-header">
@@ -63,3 +55,34 @@
         </div>
     </div>
 </div>
+
+<h2 style="display: flex; justify-content: center; color: antiquewhite;">The Sun 15 Days Ephemeris</h2>
+<div class="card">
+    <div class="card-body">
+        <div class="table-container">
+            <table class="simulator-table">
+                <thead class="centered-header">
+                <tr>
+                    <th>Date</th>
+                    <th>Right Ascension</th>
+                    <th>Declination</th>
+                    <th>Magnitude</th>
+                    <th>Apparent Diameter</th>
+                    <th>Constellation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of tableData">
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.ra }}</td>
+                    <td>{{ item.dec }}</td>
+                    <td>{{ item.magnitude }}</td>
+                    <td>{{ item.diameter }}</td>
+                    <td>{{ item.constellation }}</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+

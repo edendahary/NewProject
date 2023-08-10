@@ -26,14 +26,29 @@ function cleanUpText(text) {
 // Function to parse the HTML and extract relevant data
 async function parseHTML(html) {
   const $ = cheerio.load(html);
+    const sunData = {
+      rise: cleanUpText($(".rise").text()),
+      transit: cleanUpText($(".transit").text()),
+      set: cleanUpText($(".set").text()),
+      currentState: cleanUpText($(".currentstate").text()),
+    };
+    
+    let arr =[]
+  const tableRows = $(".objectdata tbody tr");
 
+  tableRows.each((index, row) => {
+    const columns = $(row).find("td");
+    const rowData = [];
+
+    columns.each((index, column) => {
+      rowData.push($(column).text().trim());
+    });
+
+    arr.push(rowData.join(" | "))
+  });
+  arr.splice(0, 8);
+  sunData.Sun_15_Days = arr;
   // Extracting data from the classes "rise", "transit", "set", and "currentstate"
-  const sunData = {
-    rise: cleanUpText($(".rise").text()),
-    transit: cleanUpText($(".transit").text()),
-    set: cleanUpText($(".set").text()),
-    currentState: cleanUpText($(".currentstate").text()),
-  };
   var headlineText ="";
    $(".object_headline_text").each((index, element) => {
     headlineText = $(element).text();
@@ -126,10 +141,11 @@ async function fetchNeoData() {
     return null;
   }
 }
+
 // Main function to execute the web scraping
 async function getAsteroidsNearEarth() {
   const neoData = await fetchNeoData();
-  if (neoData) {
+  if (neoData ) {
     // Extracting the names of the asteroids
     const asteroids = neoData.near_earth_objects;
     // const asteroidNames = [];
@@ -150,6 +166,7 @@ async function getAsteroidsNearEarth() {
   }
   return null;
 }
+
 
 async function writeToKafka(randomObject) {
   try {

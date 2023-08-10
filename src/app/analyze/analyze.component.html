@@ -1,15 +1,5 @@
-<h1>Statistic</h1>
-<div>
-  <div class="search-container">
-    <input type="text" placeholder="Search..." [(ngModel)]="searchText" (input)="onSearch()">
-    <select [(ngModel)]="selectedColumn" (change)="onSearch()">
-      <option value="All">All Columns</option>
-      <option value="name">Name</option>
-      <option value="year">Year</option>
-      <option value="absolute_magnitude_h">Absolute Magnitude (H)</option>
-      <!-- Add more options for other columns if needed -->
-    </select>
-  </div>
+<h1 class="centered-heading">NEO Earth Close Approaches</h1>
+<div class="card">
   <table class="asteroids-table">
     <thead>
       <tr>
@@ -36,8 +26,10 @@
       </tr>
     </tbody>
   </table>
-  <div class="chart-container">
-    <canvas id="ASTEROIDS"></canvas>
-  </div>
-  
+</div>
+<h2 style="display: flex; justify-content: center; color: antiquewhite;">Distribution of asteroids</h2>
+<div class="char">
+<div class="chart-container">
+  <canvas id="ASTEROIDS"></canvas>
+</div>
 </div>

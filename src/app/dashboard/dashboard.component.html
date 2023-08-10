@@ -1,11 +1,14 @@
-<h1>Dashboard</h1>
+<h1 class="centered-heading">Sky Live</h1>
 <div class="card">
   <div class="card-body">
-<!-- Search input -->
-<div class="search-container">
-  <input type="text" placeholder="Search..." [(ngModel)]="searchText" (input)="onSearch()">
+    <!-- Search input -->
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search..." [(ngModel)]="searchText" (input)="onSearch()">
 
+      
       <!-- Column selector dropdown -->
+      <div class="column-dropdown">
+      <label for="selectColumn">Search in:</label>
       <select [(ngModel)]="selectedColumn" (change)="onSearch()">
         <option value="All">All Columns</option>
         <option value="Name">Name</option>
@@ -14,9 +17,22 @@
         <option value="Telescope">Telescope</option>
         <option value="RA">RA</option>
         <option value="DEC">DEC</option>
-        <option value="Priority">Priority</option>
         <!-- Add more options for other columns if needed -->
       </select>
+    </div>
+    
+    </div>
+      <!-- Date range picker -->
+    <div class="date-range-picker">
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" [(ngModel)]="startDate">
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" [(ngModel)]="endDate">
+      <button class="search-button" (click)="onSearchByDateRange()">Search</button>
+      <button class="clear-button" (click)="clearDateRange()">Clear</button>
+      <div *ngIf="startDate && endDate" class="date-range-label">
+        Searching data from {{ formatDate(startDate) }} to {{ formatDate(endDate) }}
+      </div>
     </div>
 
     <!-- Table to display the simulator values -->
@@ -47,7 +63,7 @@
       </table>
     </div>
   </div>
-  </div>
+</div>
 
   
     

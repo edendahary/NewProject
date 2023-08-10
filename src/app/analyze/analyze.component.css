@@ -29,11 +29,39 @@ table.asteroids-table {
     background-color: #e5e5e5;
   }
 
+  .char {
+    text-align: center;
+    padding: 10px;
+    height: 400px;
+    width: 34%;
+    margin: 0 auto; /* Add this line to center horizontally */
+    border: 2px solid #333; /* Add a border around the element */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+    border-radius: 10px; /* Add rounded corners */
+    background-color: #f7f7f7; /* Add a light background color */
+  }
+
   .chart-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px; /* Set the desired height for the chart container */
+    height: 380px; /* Set the desired height for the chart container */
+    padding: 10px; /* Add padding around the container to separate the border from the content */
+    border: 1px solid #ddd; /* Add a 1-pixel solid border with a light gray color */
+    background-color: #fff; /* White background */
   }
+  .centered-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: antiquewhite;
+    font-size: 4rem;
+
+}
+
+
+  
+
+
   
   

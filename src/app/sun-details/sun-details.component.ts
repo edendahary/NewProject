@@ -11,6 +11,8 @@ export class SunDetailsComponent {
   sunspotImageUrl1!: string | null;
   sunspotImageUrl2!: string | null;
   allData: any ;
+  dataArray: any;
+  tableData:any[] = [];
   SunValues:any[] = [];
    async ngOnInit() {
     this.allData = await this.getDataFromServer();
@@ -30,8 +32,24 @@ export class SunDetailsComponent {
       let array= []
        array = data.sunData.value.Sun_Physical_Data;
        array.shift();
+      this.dataArray = data.sunData.value.Sun_15_Days;
+      await this.parseData();
       this.SunValues =array 
     }
+  }
+
+   async parseData() {
+    this.tableData = this.dataArray.map((data: { split: (arg0: string) => [any, any, any, any, any, any]; }) => {
+      const [date, ra, dec, magnitude, diameter, constellation] = data.split('|');
+      return {
+        date,
+        ra,
+        dec,
+        magnitude,
+        diameter,
+        constellation
+      };
+    });
   }
 
   async getSunspotImage() {
@@ -47,6 +65,21 @@ export class SunDetailsComponent {
       this.sunspotImageUrl = null;
     }
   }
+
+  // async  parseData() {
+  //   this.dataArray = this.dataArray.map(data => {
+  //     const [date, ra, dec, magnitude, diameter, constellation] = data.split(',');
+  //     return {
+  //       date,
+  //       ra,
+  //       dec,
+  //       magnitude,
+  //       diameter,
+  //       constellation
+  //     };
+  //   });
+  // }
+
 
   
 

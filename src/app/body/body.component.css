@@ -8,7 +8,11 @@
     transition: all .5s ease;
     background: #f4f7fa;
     padding: 3rem;
-
+    background-image: url('../../assets/space.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow-y: auto;
 }
 .body-trimmed{
     width: calc(100% - 16.6525rem);

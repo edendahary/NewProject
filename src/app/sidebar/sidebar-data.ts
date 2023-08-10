@@ -7,7 +7,7 @@ export const sidebarData = [
      {
         routeLink: 'analyze',
         icon: 'fal fa-chart-bar',
-        label: 'Statistics'
+        label: 'NEO'
     },
     {
         routeLink: 'sun-details',

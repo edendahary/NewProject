@@ -65,7 +65,7 @@ client.on("connect", async function () {
   }
 
   // Run the function initially and then repeat it every 5 seconds
-  // setInterval(processRandomObject, 5000);
+  // setInterval(processRandomObject, 10000);
 });
 
 

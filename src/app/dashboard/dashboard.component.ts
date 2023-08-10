@@ -10,16 +10,13 @@ Chart.register(...registerables);
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
-  sunspotImageUrl!: string | null;
-  sunspotImageUrl1!: string | null;
-  sunspotImageUrl2!: string | null;
-
-  selectedDate: Date | undefined; 
+  startDate: string | null = null; // Stores the start date for the date range
+  endDate: string | null = null;   // Stores the end date for the date range
+ 
 
   constructor() {} 
   async ngOnInit() {
     this.allData = await this.getDataFromServer();
-    this.getSunspotImage();
 
   }
   arrSimulatorValues: any[] = [];
@@ -29,61 +26,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   searchText: string = '';
   selectedColumn: string = 'All'; // Default to 'all' for searching in all columns
 
-
-  onSearchByDate() {
-    // Filter the data based on the selected date
-    if (this.selectedDate) {
-      this.filteredArrSimulatorValues = this.arrSimulatorValues.filter(
-        (item) => item.date === this.selectedDate
-      );
-    } else {
-      // If no date is selected, show all data
-      this.filteredArrSimulatorValues = this.arrSimulatorValues;
-    }
-  }
-
   async ngAfterViewInit() {
-    // this.RenderChart('bar', 'EVENTS');
-    // this.RenderChart('scatter', 'ASTEROIDS');
     this.filteredArrSimulatorValues = this.arrSimulatorValues;
-
-    
-    
     // Fetch data from the server and wait for the response
     const data = await this.getDataFromServer();
-    if (data) {
-      // Assuming you have extracted the relevant data from the getDataFromServer() response
-      const sunData = data.sunData;
-      const sunLabels = ['1 hour ago', '1.5 hours ago', '1 hour ago', '0.5 hours ago', '30 mins ago', 'Current'];
-      // this.RenderChartSun(sunData, sunLabels);
-
-      const nasaData = data.nasaData;
-      const nasaLabels = ['0-4 hours', '4-8 hours', '8-12 hours', '12-16 hours', '16-20 hours', '20-24 hours'];
-      // this.RenderChartNEO(nasaData, nasaLabels);
-    }
   }
-
-  async getSunspotImage() {
-    try {
-      // Fetch the sunspot image URL from the service
-      // const response = await this.sunInfoService.getSunspotImage().toPromise();     
-      const response = this.allData.sunData.value.images;
-      this.sunspotImageUrl = response[0];
-      this.sunspotImageUrl1 = response[1];
-      this.sunspotImageUrl2 = response[2];
-    } catch (error) {
-      console.error('Error fetching sunspot image:', error);
-      this.sunspotImageUrl = null;
-    }
-  }
-
-  
 
   async getDataFromServer() {
     try {
       const responseNasa = await axios.get("http://localhost:8000/app/get-nasa-details");
       const nasaDetailsValues = responseNasa.data;
-      console.log(nasaDetailsValues.value);
+      // console.log(nasaDetailsValues.value);
 
       const responseSun = await axios.get("http://localhost:8000/app/get-sun-details");
       const sunDetailsValues = responseSun.data;
@@ -99,7 +52,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       }
       this.arrSimulatorValues = arrSimulatorValues;
       this.filteredArrSimulatorValues = arrSimulatorValues;
-      console.log(arrSimulatorValues);
+      // console.log(arrSimulatorValues);
       // Return the extracted data as an object
       return {
         nasaData: nasaDetailsValues.value,
@@ -110,82 +63,43 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       return null; // Return null in case of an error
     }
   }
-  
 
+  onStartDateChange(event: any) {
+    // Check if the event's target is null before accessing its value
+    if (event.target) {
+      this.startDate = event.target.value;
+      this.filterDataByDateRange();
+    }
+  }
   
-
-
-  
-
-  RenderChartSun(sunData: number[], sunLabels: string[]) {
-    // Replace this example data with your actual data for Sun radiation (Last 2 hours)
-    // const sunData = [0.5, 0.8, 1.2, 0.9, 1.5, 1.7]; // Example data for radiation levels
-    // const sunLabels = ['1 hour ago', '1.5 hours ago', '1 hour ago', '0.5 hours ago', '30 mins ago', 'Current']; // Example labels for time intervals
-  
-    const sunChart = new Chart('SUN', {
-      type: 'line', // Use line chart for Sun radiation data
-      data: {
-        labels: sunLabels,
-        datasets: [{
-          label: 'Sun Radiation Levels',
-          data: sunData,
-          borderColor: 'rgba(255, 206, 86, 1)', // Yellow color for line
-          backgroundColor: 'rgba(255, 206, 86, 0.2)', // Yellow color with opacity for the area under the line
-          borderWidth: 1,
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Radiation Level'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Time Interval'
-            }
-          }
-        }
-      }
-    });
+  onEndDateChange(event: any) {
+    // Check if the event's target is null before accessing its value
+    if (event.target) {
+      this.endDate = event.target.value;
+      this.filterDataByDateRange();
+    }
   }
 
-  RenderChartNEO(neoData: number[], neoLabels: string[]) {
-    // Replace this example data with your actual data for NEOs in the last 24 hours
-    // const neoData = [3, 2, 6, 1, 4, 5]; // Example data for NEO occurrences
-    // const neoLabels = ['0-4 hours', '4-8 hours', '8-12 hours', '12-16 hours', '16-20 hours', '20-24 hours']; // Example labels for time intervals
-  
-    const neoChart = new Chart('NEO', {
-      type: 'radar', // Use radar chart for NEO data
-      data: {
-        labels: neoLabels,
-        datasets: [{
-          label: 'NEO Occurrences',
-          data: neoData,
-          borderColor: 'rgba(153, 102, 255, 1)', // Purple color for the radar line
-          backgroundColor: 'rgba(153, 102, 255, 0.2)', // Purple color with opacity for the radar area
-          borderWidth: 1,
-        }]
-      },
-      options: {
-        scales: {
-          r: {
-            beginAtZero: true,
-            angleLines: {
-              display: true
-            },
-            pointLabels: {
-              display: true
-            }
-          }
-        }
-      }
-    });
+  // Inside your DashboardComponent class
+onSearchByDateRange() {
+  if (this.startDate && this.endDate) {
+    this.filterDataByDateRange();
   }
+}
+
+clearDateRange() {
+  this.startDate = null;
+  this.endDate = null;
+  this.filteredArrSimulatorValues = this.arrSimulatorValues;
+}
+
+formatDate(date: string): string {
+  const parsedDate = new Date(date);
+  return parsedDate.toLocaleDateString();
+}
+
+  
+
 
   onSearch() {
     // Filter the arrSimulatorValues based on the search text and selected column
@@ -199,6 +113,31 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.doesItemMatchSearch(item, searchTerm, this.selectedColumn)
       );
     }
+    // this.filterDataByDateRange();
+  }
+
+  filterDataByDateRange() {
+    // Filter the data based on the selected date range
+    if (this.startDate && this.endDate) {
+      this.filteredArrSimulatorValues = this.arrSimulatorValues.filter(item =>
+        this.isItemInDateRange(item, this.startDate, this.endDate)
+      );
+    } else {
+      // No date range selected, show all data
+      this.filteredArrSimulatorValues = this.arrSimulatorValues;
+    }
+  }
+
+  isItemInDateRange(item: any, startDate: string | null, endDate: string | null): boolean {
+    // Convert start and end dates to Date objects
+    const start = startDate ? new Date(startDate) : null;
+    const end = endDate ? new Date(endDate) : null;
+
+    // Convert item date to a Date object
+    const itemDate = new Date(item.date);
+
+    // Check if the item's date is within the selected date range
+    return (start === null || itemDate >= start) && (end === null || itemDate <= end);
   }
   
   doesItemMatchSearch(item: any, searchTerm: string, column?: string): boolean | undefined {
@@ -217,8 +156,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           return item.RA.toLowerCase().includes(searchTerm);
         case 'DEC':
           return item.DEC.toLowerCase().includes(searchTerm);
-        case 'Priority':
-          return item.priority.toLowerCase().includes(searchTerm);
+        // case 'Priority':
+        //   return item.priority.trim().toLowerCase() === searchTerm.trim();
         default:
           return undefined; // Return undefined when the column is not recognized
       }
@@ -230,10 +169,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         item.event.toString().includes(searchTerm) ||
         item.telescope.toLowerCase().includes(searchTerm) ||
         item.RA.toLowerCase().includes(searchTerm) ||
-        item.DEC.toLowerCase().includes(searchTerm) ||
-        item.priority.toString().includes(searchTerm)
+        item.DEC.toLowerCase().includes(searchTerm) // ||
+        // item.priority.trim().toLowerCase().includes(searchTerm)
       );
-}
-}
-
+    }
+  }
 }
