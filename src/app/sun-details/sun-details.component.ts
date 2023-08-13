@@ -85,7 +85,7 @@ export class SunDetailsComponent {
       parts.shift();
 
       const currentState_1 = parts[0].split(',');
-      var currState_final = currentState_1 + parts[1];
+      var currState_final = currentState_1[0] +" " + parts[1];
       this.currentState = currState_final;
 
       const altitudeMatch = responseSun.data.value.transit.match(/Max altitude:\s*([\d.]+)°/);
