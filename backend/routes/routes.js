@@ -42,9 +42,9 @@ router.get("/get-nasa-details", async (req, res) => {
       `http://localhost:9200/logs/_count`
     );
     var totalCount = response.data.count;
-    if (totalCount >= 200){
-      totalCount = 200;
-    }
+    // if (totalCount >= 200){
+    //   totalCount = 200;
+    // }
       try {
         const response = await axios.get(
           `http://localhost:9200/logs/_search?size=${totalCount}`
@@ -59,6 +59,28 @@ router.get("/get-nasa-details", async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
       }
 });
+
+
+  router.get("/getsimulator-recent-data", async (req, res) => {
+    axios
+          .get("http://localhost:9200/logs/_search", {
+            params: {
+              size: 1,
+              sort: `${your_timestamp_field}:desc`, // Replace with your timestamp field
+            },
+          })
+          .then((esResponse) => {
+            if (esResponse.data.hits.hits.length > 0) {
+              const latestDocument = esResponse.data.hits.hits[0]._source;
+              res.status(200).json({ value: latestDocument });
+              console.log('Latest Document:', latestDocument);
+            } else {
+              console.log('No documents found in Elasticsearch.');
+              res.status(200).json({ value: latestDocument });
+            }
+          })
+
+  });
 
 
 

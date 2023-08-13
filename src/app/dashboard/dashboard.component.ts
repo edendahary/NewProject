@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit ,ViewChild, ElementRef } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import axios from 'axios';
 
@@ -12,12 +12,15 @@ Chart.register(...registerables);
 export class DashboardComponent implements OnInit, AfterViewInit {
   startDate: string | null = null; // Stores the start date for the date range
   endDate: string | null = null;   // Stores the end date for the date range
+  totalEvents: number = 0;
+  @ViewChild('eventDistributionChart') eventDistributionChartRef!: ElementRef;
+
  
 
   constructor() {} 
   async ngOnInit() {
     this.allData = await this.getDataFromServer();
-
+    this.generateEventDistributionChart(this.allData.simulatorData);
   }
   arrSimulatorValues: any[] = [];
   allData: any ;
@@ -30,6 +33,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.filteredArrSimulatorValues = this.arrSimulatorValues;
     // Fetch data from the server and wait for the response
     const data = await this.getDataFromServer();
+    this.generateEventDistributionChart(this.arrSimulatorValues);
   }
 
   async getDataFromServer() {
@@ -40,7 +44,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
       const responseSun = await axios.get("http://localhost:8000/app/get-sun-details");
       const sunDetailsValues = responseSun.data;
-      // console.log(sunDetailsValues);
+      console.log(sunDetailsValues);
 
       let arrSimulatorValues = [];
       const responseSimulator = await axios.get("http://localhost:8000/app/getsimulator");
@@ -52,7 +56,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       }
       this.arrSimulatorValues = arrSimulatorValues;
       this.filteredArrSimulatorValues = arrSimulatorValues;
-      // console.log(arrSimulatorValues);
+      this.totalEvents = arrSimulatorValues.length;
+      console.log(arrSimulatorValues);
       // Return the extracted data as an object
       return {
         nasaData: nasaDetailsValues.value,
@@ -62,6 +67,65 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       console.error("Error fetching data:", error.message);
       return null; // Return null in case of an error
     }
+  }
+  getTotalEvents(): number {
+    return this.totalEvents;
+  }
+  getCurrentDate(): string {
+    const currentDate = new Date();
+    return currentDate.toDateString();
+  }
+
+  generateEventDistributionChart(data: any[]) {
+    const eventLabels = [];
+    const eventCounts = [];
+  
+    // Count occurrences of each event
+    const eventCountMap = new Map();
+    for (const item of data) {
+      const event = item.event;
+      if (eventCountMap.has(event)) {
+        eventCountMap.set(event, eventCountMap.get(event) + 1);
+      } else {
+        eventCountMap.set(event, 1);
+      }
+    }
+  
+    // Extract event labels and counts
+    for (const [event, count] of eventCountMap) {
+      eventLabels.push(event);
+      eventCounts.push(count);
+    }
+
+    const colors = [
+      'rgba(255, 99, 132, 0.6)',
+      'rgba(54, 162, 235, 0.6)',
+      'rgba(255, 206, 86, 0.6)',
+      'rgba(75, 192, 192, 0.6)',
+      'rgba(153, 102, 255, 0.6)',
+      // Add more colors as needed
+    ];
+  
+    const ctx = this.eventDistributionChartRef.nativeElement.getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: eventLabels,
+        datasets: [{
+          label: 'Event Distribution',
+          data: eventCounts,
+          borderColor: 'rgba(54, 162, 235, 0.6)',
+          fill: false,
+        }],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
   }
 
   onStartDateChange(event: any) {

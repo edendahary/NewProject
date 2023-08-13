@@ -1,3 +1,48 @@
+.statistic-title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 2px solid #007bff; 
+  border-radius: 15px; 
+  padding: 10px;
+  background-color: #252839; 
+  margin-bottom: 20px;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.statistic-title {
+  position: relative;
+  font-size: 45px;
+  color: #252839;
+  -webkit-text-stroke: 0.1vw  #383d52;
+  text-transform: uppercase;
+}
+
+.statistic-title::before {
+  content: attr(data-statistic-title); 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  color: #01fe87; 
+  overflow: hidden;
+  animation: animate 6s linear infinite;
+}
+
+@keyframes animate {
+  0%, 10%, 100%
+  {
+    width: 0;
+  }
+  70%, 90% {
+    width: 100%;
+  }
+}
+
 
 /* Style the table */
 table.asteroids-table {
@@ -50,15 +95,54 @@ table.asteroids-table {
     border: 1px solid #ddd; /* Add a 1-pixel solid border with a light gray color */
     background-color: #fff; /* White background */
   }
-  .centered-heading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: antiquewhite;
-    font-size: 4rem;
 
+
+  /* Summary Cards */
+.summary-cards {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
+.summary-card {
+  flex: 1;
+  max-width: 250px; 
+}
+
+.cardd {
+  padding: 2px; 
+  background-color: #d8c4e2;
+  transition: background-color 0.3s;
+  border: 2px solid #4492ff;
+  border-radius: 15px;
+}
+
+.cardd:hover {
+  background-color: #f2f2f2; 
+}
+
+.card-body {
+  margin: 0; 
+}
+
+.card-icon {
+  text-align: center;
+  font-size: 24px;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+/* Custom font class */
+.total-asteroids {
+  font-family: 'Montserrat';
+  font-size: 24px; 
+  font-weight: bold; 
+  color: #416010;
+}
+
+.title {
+  font-size: 24px; /* Set the desired font size for the title */
+}
 
   
 

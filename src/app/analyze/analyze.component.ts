@@ -14,25 +14,38 @@ export class AnalyzeComponent implements OnInit {
   filteredAsteroidData: any[] = []; // Initialize filteredAsteroidData as an empty array
   searchText: string = '';
   selectedColumn: string = 'All'; // Default to 'all' for searching in all columns
+  totalAsteroid: number = 0;
+
 
 
   ngOnInit() {
     this.getDataFromServer();
   }
 
+
+      // Create an empty array to hold all the asteroids
+
+
+      // Loop through the dates and access the corresponding array of asteroids
+
+
+
+
   async getDataFromServer() {
     try {
       const responseNasa = await axios.get("http://localhost:8000/app/get-nasa-details");
       const nasaDetailsValues = responseNasa.data;
+      const nasaAsteroidsMonthAgo = nasaDetailsValues.value.asteroidMonthBefore; // כל האסטרודים חודש אחורה 
 
+  
       // Create an empty array to hold all the asteroids
       const allAsteroids: any[] = [];
+      const dates = Object.keys(nasaDetailsValues.value.asteroids);
 
-      const dates = Object.keys(nasaDetailsValues.value);
 
       // Loop through the dates and access the corresponding array of asteroids
       for (const date of dates) {
-        const asteroids: any[] = nasaDetailsValues.value[date]; // Specify the type for asteroids
+        const asteroids: any[] = nasaDetailsValues.value.asteroids[date]; 
         // console.log('Date:', date); // The date for the group of asteroids
         // console.log('Asteroids:', asteroids); // The array of asteroids for that date
 
@@ -44,6 +57,7 @@ export class AnalyzeComponent implements OnInit {
 
         // Concatenate the asteroids for the current date to the allAsteroids array
         allAsteroids.push(...asteroidsWithYear);
+        this.totalAsteroid = allAsteroids.length;
       }
 
       this.asteroidData = allAsteroids;
@@ -55,6 +69,14 @@ export class AnalyzeComponent implements OnInit {
     } catch (error: any) {
       console.error("Error fetching data:", error.message);
     }
+  }
+
+  getTotalAsteroids(): number {
+    return this.totalAsteroid;
+  }
+  getCurrentDate(): string {
+    const currentDate = new Date();
+    return currentDate.toDateString();
   }
 
   renderAsteroidsChart(asteroidsData: any[]) {

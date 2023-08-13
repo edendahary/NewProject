@@ -1,4 +1,33 @@
-<h1 class="centered-heading">Sky Live</h1>
+<div class="dashboard-title-container">
+  <h1 class="dashboard-title" data-dashboard-title="Dashboard">Dashboard</h1>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- Summary Cards -->
+<div class="summary-cards">
+  <!-- Total Events Card -->
+  <div class="summary-card">
+    <div class="cardd">
+      <div class="card-body">
+        <h2 class="title"><i class="fas fa-star card-icon"></i> Total Events</h2>
+        <p class="total-events">{{ getTotalEvents() }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date Card -->
+  <div class="summary-card">
+    <div class="cardd">
+      <div class="card-body">
+        <h2 class="title"><i class="fas fa-calendar-alt card-icon"></i> Date</h2>
+        <p class="total-events">{{ getCurrentDate() }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="card">
   <div class="card-body">
     <!-- Search input -->
@@ -64,6 +93,19 @@
     </div>
   </div>
 </div>
+
+<div class="chart-container">
+  <!-- Pie Chart -->
+  <div class="chart">
+    <canvas #eventDistributionChart></canvas>
+  </div>
+
+  <!-- Top 5 Events Bar Chart -->
+  <div class="chart">
+    <canvas #topEventsChart></canvas>
+  </div>
+</div>
+
 
   
     

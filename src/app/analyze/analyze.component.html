@@ -1,4 +1,28 @@
-<h1 class="centered-heading">NEO Earth Close Approaches</h1>
+<div class="statistic-title-container">
+  <h1 class="statistic-title" data-statistic-title="Statistic">Statistic</h1>
+</div>
+<!-- Summary Cards -->
+<div class="summary-cards">
+  <!-- Total Asteroids Card -->
+  <div class="summary-card">
+    <div class="cardd">
+      <div class="card-body">
+        <h2 class="title"><i class="fas fa-star card-icon"></i> Total Asteroids</h2>
+        <p class="total-asteroids">{{ getTotalAsteroids() }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date Card -->
+  <div class="summary-card">
+    <div class="cardd">
+      <div class="card-body">
+        <h2 class="title"><i class="fas fa-calendar-alt card-icon"></i> Date</h2>
+        <p class="total-asteroids">{{ getCurrentDate() }}</p>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="card">
   <table class="asteroids-table">
     <thead>
@@ -27,7 +51,6 @@
     </tbody>
   </table>
 </div>
-<h2 style="display: flex; justify-content: center; color: antiquewhite;">Distribution of asteroids</h2>
 <div class="char">
 <div class="chart-container">
   <canvas id="ASTEROIDS"></canvas>

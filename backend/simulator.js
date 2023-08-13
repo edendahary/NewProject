@@ -26,14 +26,14 @@ function cleanUpText(text) {
 // Function to parse the HTML and extract relevant data
 async function parseHTML(html) {
   const $ = cheerio.load(html);
-    const sunData = {
-      rise: cleanUpText($(".rise").text()),
-      transit: cleanUpText($(".transit").text()),
-      set: cleanUpText($(".set").text()),
-      currentState: cleanUpText($(".currentstate").text()),
-    };
-    
-    let arr =[]
+  const sunData = {
+    rise: cleanUpText($(".rise").text()),
+    transit: cleanUpText($(".transit").text()),
+    set: cleanUpText($(".set").text()),
+    currentState: cleanUpText($(".currentstate").text()),
+  };
+
+  let arr = [];
   const tableRows = $(".objectdata tbody tr");
 
   tableRows.each((index, row) => {
@@ -44,13 +44,13 @@ async function parseHTML(html) {
       rowData.push($(column).text().trim());
     });
 
-    arr.push(rowData.join(" | "))
+    arr.push(rowData.join(" | "));
   });
   arr.splice(0, 8);
   sunData.Sun_15_Days = arr;
   // Extracting data from the classes "rise", "transit", "set", and "currentstate"
-  var headlineText ="";
-   $(".object_headline_text").each((index, element) => {
+  var headlineText = "";
+  $(".object_headline_text").each((index, element) => {
     headlineText = $(element).text();
   });
 
@@ -69,31 +69,32 @@ async function parseHTML(html) {
   images.pop();
 
   sunData.images = images;
-var Sun_Physical_Data = []
-  const objectdataElement = $('.objectdata');
+  var Sun_Physical_Data = [];
+  const objectdataElement = $(".objectdata");
 
   // Split the text content into lines and process each line
 
   const textContent = objectdataElement.text();
-  const data =cleanUpText(textContent)
+  const data = cleanUpText(textContent);
 
-  const lines = data.split('\n\t\n\t\n\t');
+  const lines = data.split("\n\t\n\t\n\t");
 
-// Process each group of data
-lines.forEach(group => {
-  const groupLines = group.split('\n\t');
-  const parameter = groupLines[0];
-  const value = groupLines[1];
-  const relativeToEarth = groupLines[2];
-  let sun_obj={parameter:parameter,value:value,relativeToEarth:relativeToEarth}
-  if(Sun_Physical_Data.length < 7 ){
-  Sun_Physical_Data.push(sun_obj)
-}
-
-});
-sunData.Sun_Physical_Data= Sun_Physical_Data;
-
-
+  // Process each group of data
+  lines.forEach((group) => {
+    const groupLines = group.split("\n\t");
+    const parameter = groupLines[0];
+    const value = groupLines[1];
+    const relativeToEarth = groupLines[2];
+    let sun_obj = {
+      parameter: parameter,
+      value: value,
+      relativeToEarth: relativeToEarth,
+    };
+    if (Sun_Physical_Data.length < 7) {
+      Sun_Physical_Data.push(sun_obj);
+    }
+  });
+  sunData.Sun_Physical_Data = Sun_Physical_Data;
 
   return sunData;
 }
@@ -108,7 +109,6 @@ async function getSunDetails() {
 }
 
 // -------------------- nasa API for Asteroids that are near to Earth --------------------
-
 const nasa_url = "https://api.nasa.gov/neo/rest/v1/feed";
 const apiKey = "rUa8liI9NS6MNV6uuiEmUbJRoMdOSQHHbOHLubVB";
 
@@ -128,6 +128,10 @@ async function fetchNeoData() {
   const endDate = formatDate(nextDay);
 
   try {
+    var temp_date = new Date();
+    temp_date.setMonth(temp_date.getMonth() - 1);
+    var now_date = formatDate(temp_date);
+    const asteroid_url = `https://ssd-api.jpl.nasa.gov/cad.api?date-min=${now_date}`;
     const response = await axios.get(nasa_url, {
       params: {
         start_date: startDate,
@@ -135,6 +139,8 @@ async function fetchNeoData() {
         api_key: apiKey,
       },
     });
+    const response_asteroid = await axios.get(asteroid_url);
+    response.data.response_asteroid = response_asteroid.data.data;
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -145,10 +151,11 @@ async function fetchNeoData() {
 // Main function to execute the web scraping
 async function getAsteroidsNearEarth() {
   const neoData = await fetchNeoData();
-  if (neoData ) {
+  if (neoData) {
     // Extracting the names of the asteroids
     const asteroids = neoData.near_earth_objects;
     // const asteroidNames = [];
+    const asteroidMonthBefore = neoData.response_asteroid;
 
     // Loop through each date in the near_earth_objects object
     // for (const date in asteroids) {
@@ -162,11 +169,10 @@ async function getAsteroidsNearEarth() {
     //   }
     // }
 
-    return asteroids;
+    return { asteroids, asteroidMonthBefore };
   }
   return null;
 }
-
 
 async function writeToKafka(randomObject) {
   try {
@@ -197,8 +203,6 @@ async function writeToKafka(randomObject) {
     const randomTelescope = await getRandomItemFromArray(arrayTelescopes);
     const randomDate = await getRandomDateBetween(1980, 2023);
     const randomPriority = await getRandomPriority();
-    // const sunDetails = await getSunDetails();
-    // const AsteroidsNearEarth = await getAsteroidsNearEarth();
     const extractedData = {
       DEC,
       RA,

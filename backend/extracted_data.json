@@ -1,9 +1,9 @@
 {
-  "DEC": "-26:59:12.00",
-  "RA": "23:21:15.50",
-  "Title_HD": "G4V",
-  "date": "1984-02-04T14:28:54.761Z",
+  "DEC": "+46:59:57.00",
+  "RA": "19:16:51.40",
+  "Title_HD": "F6IV:",
+  "date": "2009-05-05T02:59:52.468Z",
   "priority": 5,
   "telescope": "Gran Telescopio Canarias",
-  "event": "GRB"
+  "event": "UV Rise"
 }
