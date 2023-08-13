@@ -33,7 +33,7 @@ function queueRandomMessage(file) {
       priority: jsonObject.priority,
       telescope: jsonObject.telescope,
       event: jsonObject.event,
-
+      timestamp: jsonObject.timestamp,
     };
 
     const success = stream.write(eventType.toBuffer(event));

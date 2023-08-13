@@ -211,6 +211,7 @@ async function writeToKafka(randomObject) {
       priority: randomPriority,
       telescope: randomTelescope,
       event: randomEvent,
+      timestamp: new Date().getTime(), // Set the timestamp here
     };
     // Write the JSON object to a file
     const filePath = path.join(__dirname, "extracted_data.json");

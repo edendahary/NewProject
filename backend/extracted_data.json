@@ -1,9 +1,10 @@
 {
-  "DEC": "+46:59:57.00",
-  "RA": "19:16:51.40",
-  "Title_HD": "F6IV:",
-  "date": "2009-05-05T02:59:52.468Z",
-  "priority": 5,
-  "telescope": "Gran Telescopio Canarias",
-  "event": "UV Rise"
+  "DEC": "-30:12:38.00",
+  "RA": "17:15:51.50",
+  "Title_HD": "B9.5V",
+  "date": "1984-06-28T14:44:11.060Z",
+  "priority": 2,
+  "telescope": "MMT",
+  "event": "Apparent Brightness Rise",
+  "timestamp": 1691931348275
 }

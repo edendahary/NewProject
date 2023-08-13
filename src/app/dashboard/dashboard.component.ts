@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, OnInit ,ViewChild, ElementRef } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import axios from 'axios';
+import { interval, switchMap } from 'rxjs';
 
 Chart.register(...registerables);
 
@@ -19,6 +20,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   constructor() {} 
   async ngOnInit() {
+    setInterval(this.fetchRecentEvent, 10000); // 10 seconds interval
     this.allData = await this.getDataFromServer();
     this.generateEventDistributionChart(this.allData.simulatorData);
   }
@@ -27,7 +29,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   filteredArrSimulatorValues: any[] = []; // Initialize filteredArrSimulatorValues as an empty array
   // Inside DashboardComponent class
   searchText: string = '';
-  selectedColumn: string = 'All'; // Default to 'all' for searching in all columns
+  selectedColumn: string = 'All'; // Default to 'All' for searching in all columns
 
   async ngAfterViewInit() {
     this.filteredArrSimulatorValues = this.arrSimulatorValues;
@@ -36,11 +38,25 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.generateEventDistributionChart(this.arrSimulatorValues);
   }
 
+  fetchRecentEvent = async () => {
+      try {
+        const recentEvent = await axios.get<any>('http://localhost:8000/app/getsimulator-recent-data');
+        console.log('Recent Event Response:', recentEvent.data);
+        // You can update your UI here or perform any actions with the response data
+      } catch (error) {
+        console.error('Error fetching recent event:', error);
+      }
+    };
+
+  
+
   async getDataFromServer() {
     try {
       const responseNasa = await axios.get("http://localhost:8000/app/get-nasa-details");
       const nasaDetailsValues = responseNasa.data;
       // console.log(nasaDetailsValues.value);
+  
+
 
       const responseSun = await axios.get("http://localhost:8000/app/get-sun-details");
       const sunDetailsValues = responseSun.data;
@@ -77,6 +93,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   generateEventDistributionChart(data: any[]) {
+    if(data){
     const eventLabels = [];
     const eventCounts = [];
   
@@ -126,6 +143,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         },
       },
     });
+  }
   }
 
   onStartDateChange(event: any) {

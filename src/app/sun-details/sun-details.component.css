@@ -12,7 +12,12 @@
   margin-left: auto;
   margin-right: auto;
 }
-
+.centered-heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: antiquewhite;
+}
 .sun-title {
   position: relative;
   font-size: 45px;
@@ -42,12 +47,14 @@
     width: 100%;
   }
 }
+.table-container{
+  background-color: white;
+}
 
 .simulator-table {
   width: 100%;
   border-collapse: collapse;
 }
-
 .simulator-table th,
 .simulator-table td {
   padding: 8px;

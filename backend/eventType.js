@@ -31,5 +31,9 @@ module.exports = avro.Type.forSchema({
       name: "event",
       type: "string",
     },
+    {
+      name: "timestamp", 
+      type: "long", 
+    },
   ],
 });
