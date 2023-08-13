@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   constructor() {} 
   async ngOnInit() {
-    setInterval(this.fetchRecentEvent, 10000); // 10 seconds interval
+    // setInterval(this.fetchRecentEvent, 10000); // 10 seconds interval
     this.allData = await this.getDataFromServer();
     this.generateEventDistributionChart(this.allData.simulatorData);
   }

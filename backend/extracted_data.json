@@ -1,10 +1,10 @@
 {
-  "DEC": "-30:12:38.00",
-  "RA": "17:15:51.50",
-  "Title_HD": "B9.5V",
-  "date": "1984-06-28T14:44:11.060Z",
-  "priority": 2,
+  "DEC": "+56:46:48.00",
+  "RA": "20:31:46.50",
+  "Title_HD": "gK5",
+  "date": "2017-10-01T07:20:06.836Z",
+  "priority": 1,
   "telescope": "MMT",
-  "event": "Apparent Brightness Rise",
-  "timestamp": 1691931348275
+  "event": "Comet",
+  "timestamp": 1691931378312
 }

@@ -4,8 +4,37 @@
 <div class="card">
     <p class="paragraph-style">{{this.allData?.sunData?.value?.headline}}</p>
 </div>
-<div class="card2">
-    <div class="card-body">
+<div class="summary-card">
+    <div class="row">
+    <div class="cardd">
+        <span class="label">Rise:</span>
+        <span class="value">{{ rise }}</span>
+        <span class="label">Azimuth:</span>
+        <span class="value">{{ rise_azimuthValue + "°" }}</span>
+    </div>
+
+    <div class="cardd">
+        <span class="label">Set:</span>
+        <span class="value">{{ set }}</span>
+        <span class="label">Azimuth:</span>
+        <span class="value">{{ set_azimuthValue + "°" }}</span>
+    </div>
+
+    <div class="cardd">
+        <span class="label">Current State:</span>
+        <span class="value">{{ "Sun is " + currentState }}</span>
+    </div>
+
+    <div class="cardd">
+        <span class="label">Transit:</span>
+        <span class="value">{{ transit }}</span>
+        <span class="label">Max Altitude:</span>
+        <span class="value">{{ transit_altitudeValue + "°" }}</span>
+    </div>
+</div>
+</div>
+
+
         <div class="row justify-content-center">
             <!-- Sunspot Images -->
             <div class="col-lg-4">
@@ -36,11 +65,9 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
 
-<div class="card3">
+<div class="card">
     <div class="card-body">
 <h2 class="centered-heading">The Sun Physical Data</h2>
         <div class="table-container">
