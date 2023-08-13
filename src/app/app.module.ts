@@ -12,6 +12,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AnalyzeComponent } from './analyze/analyze.component';
 import { BodyComponent } from './body/body.component';
 import { SunDetailsComponent } from './sun-details/sun-details.component';
+import { NgCircleProgressModule } from 'ng-circle-progress';
 
 
 @NgModule({
@@ -30,7 +31,25 @@ import { SunDetailsComponent } from './sun-details/sun-details.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+     NgCircleProgressModule.forRoot({
+      "radius": 60,
+      "space": -10,
+      "outerStrokeGradient": true,
+      "outerStrokeWidth": 10,
+      "outerStrokeColor": "#4882c2",
+      "outerStrokeGradientStopColor": "#53a9ff",
+      "innerStrokeColor": "#e7e8ea",
+      "innerStrokeWidth": 10,
+      "title": "Loading...",
+      "titleColor":"#f7f7f7",
+      "animateTitle": false,
+      "animationDuration": 1000,
+      "showUnits": false,
+      "showBackground": false,
+      "clockwise": false,
+      "startFromZero": false,
+      "lazy": true})
     ],
   providers: [],
   bootstrap: [AppComponent]

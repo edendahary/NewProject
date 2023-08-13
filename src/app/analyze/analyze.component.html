@@ -1,3 +1,13 @@
+<div *ngIf="isLoading" class="loading-container">
+  <circle-progress [percent]="loadingProgress" [radius]="100" [outerStrokeWidth]="16" [innerStrokeWidth]="8"
+    [outerStrokeColor]="'#78C000'" [innerStrokeColor]="'yellow'" [animation]="true"
+    [animationDuration]="10000"></circle-progress>
+</div>
+
+<div *ngIf="!isLoading">
+
+
+
 <div class="statistic-title-container">
   <h1 class="statistic-title" data-statistic-title="Statistic">Statistic</h1>
 </div>
@@ -54,5 +64,6 @@
 <div class="char">
 <div class="chart-container">
   <canvas id="ASTEROIDS"></canvas>
+</div>
 </div>
 </div>

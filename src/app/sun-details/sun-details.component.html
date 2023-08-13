@@ -1,3 +1,12 @@
+<div *ngIf="isLoading" class="loading-container">
+    <circle-progress [percent]="loadingProgress" [radius]="100" [outerStrokeWidth]="16" [innerStrokeWidth]="8"
+        [outerStrokeColor]="'#78C000'" [innerStrokeColor]="'yellow'" [animation]="true"
+        [animationDuration]="10000"></circle-progress>
+</div>
+
+<div *ngIf="!isLoading">
+
+
 <div class="sun-title-container">
     <h1 class="sun-title" data-sun-title="Sun">Sun</h1>
   </div>
@@ -89,4 +98,5 @@
             </table>
         </div>
     </div>
+</div>
 </div>

@@ -1,8 +1,14 @@
+<div *ngIf="isLoading" class="loading-container">
+  <circle-progress [percent]="loadingProgress" [radius]="100" [outerStrokeWidth]="16" [innerStrokeWidth]="8"
+    [outerStrokeColor]="'#78C000'" [innerStrokeColor]="'yellow'" [animation]="true"
+    [animationDuration]="10000"></circle-progress>
+</div>
+
+<div *ngIf="!isLoading">
 <div class="dashboard-title-container">
   <h1 class="dashboard-title" data-dashboard-title="Dashboard">Dashboard</h1>
 </div>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <!-- Summary Cards -->
 <div class="summary-cards">
   <!-- Total Events Card -->
@@ -26,7 +32,29 @@
   </div>
 </div>
 
+<div class="chart-container">
+  <!-- Pie Chart -->
+  <div class="chart">
+    <canvas #eventDistributionChart></canvas>
+  </div>
 
+  <!-- Last Evant -->
+  <div class="event-details">
+    <h2>Last Event Details</h2>
+    <div *ngIf="recentEventData">
+      <p><strong>Title:</strong> {{ recentEventData.Title_HD }}</p>
+      <p><strong>Date:</strong> {{ recentEventData.date | date:'short' }}</p>
+      <p><strong>Event:</strong> {{ recentEventData.event }}</p>
+      <p><strong>Priority:</strong> {{ recentEventData.priority }}</p>
+      <p><strong>Telescope:</strong> {{ recentEventData.telescope }}</p>
+      <p><strong>RA:</strong> {{ recentEventData.RA }}</p>
+      <p><strong>DEC:</strong> {{ recentEventData.DEC }}</p>
+    </div>
+    <div *ngIf="!recentEventData">
+      <p>No recent event data available.</p>
+    </div>
+  </div>
+</div>
 
 <div class="card">
   <div class="card-body">
@@ -93,18 +121,9 @@
     </div>
   </div>
 </div>
-
-<div class="chart-container">
-  <!-- Pie Chart -->
-  <div class="chart">
-    <canvas #eventDistributionChart></canvas>
-  </div>
-
-  <!-- Top 5 Events Bar Chart -->
-  <div class="chart">
-    <canvas #topEventsChart></canvas>
-  </div>
 </div>
+
+
 
 
   

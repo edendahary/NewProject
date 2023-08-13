@@ -9,12 +9,18 @@ Chart.register(...registerables);
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
+  
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   startDate: string | null = null; // Stores the start date for the date range
   endDate: string | null = null;   // Stores the end date for the date range
   totalEvents: number = 0;
+  recentEventData: any = {}; // Initialize recentEventData
+  isLoading: boolean = true; 
+  loadingProgress: number = 0; 
+
   @ViewChild('eventDistributionChart') eventDistributionChartRef!: ElementRef;
+  lastEventCanvas!: ElementRef;
 
  
 
@@ -23,6 +29,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     // setInterval(this.fetchRecentEvent, 10000); // 10 seconds interval
     this.allData = await this.getDataFromServer();
     this.generateEventDistributionChart(this.allData.simulatorData);
+    this.loadingProgress = 100; 
+    this.isLoading = false; 
   }
   arrSimulatorValues: any[] = [];
   allData: any ;
@@ -31,22 +39,44 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   searchText: string = '';
   selectedColumn: string = 'All'; // Default to 'All' for searching in all columns
 
+
   async ngAfterViewInit() {
+    await this.fetchRecentEvent();
+    interval(10000).pipe(
+      switchMap(() => this.fetchRecentEvent())
+    ).subscribe();
+
     this.filteredArrSimulatorValues = this.arrSimulatorValues;
     // Fetch data from the server and wait for the response
     const data = await this.getDataFromServer();
     this.generateEventDistributionChart(this.arrSimulatorValues);
   }
 
-  fetchRecentEvent = async () => {
-      try {
-        const recentEvent = await axios.get<any>('http://localhost:8000/app/getsimulator-recent-data');
-        console.log('Recent Event Response:', recentEvent.data);
-        // You can update your UI here or perform any actions with the response data
-      } catch (error) {
-        console.error('Error fetching recent event:', error);
+ async fetchRecentEvent() {
+    try {
+      const recentEvent = await axios.get<any>('http://localhost:8000/app/getsimulator-recent-data');
+      const newEvent = recentEvent.data.value;
+      this.recentEventData = newEvent;
+
+      const eventAlreadyExists = this.arrSimulatorValues.some(item =>
+        item.event === newEvent.event && item.date === newEvent.date
+      );
+  
+      if (!eventAlreadyExists) {
+        // Add the new event to arrSimulatorValues
+        this.arrSimulatorValues.push(newEvent);
+        this.totalEvents = this.arrSimulatorValues.length;
       }
-    };
+      
+
+      // Check if the canvas element is available before rendering
+      if (this.lastEventCanvas && this.lastEventCanvas.nativeElement) {
+        this.renderRecentEventPriorityChart();
+      }
+    } catch (error) {
+      console.error('Error fetching recent event:', error);
+    }
+  }
 
   
 
@@ -60,7 +90,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
       const responseSun = await axios.get("http://localhost:8000/app/get-sun-details");
       const sunDetailsValues = responseSun.data;
-      console.log(sunDetailsValues);
+      // console.log(sunDetailsValues);
 
       let arrSimulatorValues = [];
       const responseSimulator = await axios.get("http://localhost:8000/app/getsimulator");
@@ -73,7 +103,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.arrSimulatorValues = arrSimulatorValues;
       this.filteredArrSimulatorValues = arrSimulatorValues;
       this.totalEvents = arrSimulatorValues.length;
-      console.log(arrSimulatorValues);
+      // console.log(arrSimulatorValues);
       // Return the extracted data as an object
       return {
         nasaData: nasaDetailsValues.value,
@@ -145,6 +175,50 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
   }
+
+  renderRecentEventPriorityChart() {
+    const priorities: number[] = [];
+    const events: string[] = [];
+  
+    for (const key in this.recentEventData) {
+      if (this.recentEventData.hasOwnProperty(key)) {
+        const event = this.recentEventData[key];
+        priorities.push(event.priority);
+        events.push(key);
+      }
+    }
+  
+    // Create a bar chart using Chart.js
+    const ctx = this.lastEventCanvas.nativeElement.getContext('2d');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: events,
+        datasets: [
+          {
+            label: 'Priority',
+            data: priorities,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Priority',
+            },
+          },
+        },
+      },
+    });
+  }
+  
 
   onStartDateChange(event: any) {
     // Check if the event's target is null before accessing its value

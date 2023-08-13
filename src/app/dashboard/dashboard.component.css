@@ -151,7 +151,7 @@
 
 .summary-card {
   flex: 1;
-  max-width: 220px; 
+  max-width: 240px; 
 }
 
 .cardd {
@@ -217,3 +217,29 @@ canvas {
   margin-top: 20px;
 }
 
+.event-details {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  color: #adcae9;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #252839; 
+  width: 48%; /* Set width for each chart to take up approximately half of the container */
+}
+
+/* Style for the event data text (e.g., <p> elements inside .event-details) */
+.event-details p {
+  color: #01fe87;
+}
+
+/* Style for the event data text with specific classes (e.g., <strong> elements inside .event-details) */
+.event-details strong {
+  color: #7ab3f1; /* Change to the desired color for the data text */
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Use the full viewport height */
+}

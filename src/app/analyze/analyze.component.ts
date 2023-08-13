@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
+
 
 Chart.register(...registerables);
 
@@ -11,15 +12,21 @@ Chart.register(...registerables);
 })
 export class AnalyzeComponent implements OnInit {
   asteroidData: any[] = [];
+  OldAsteroidData: any[] = [];
   filteredAsteroidData: any[] = []; // Initialize filteredAsteroidData as an empty array
   searchText: string = '';
   selectedColumn: string = 'All'; // Default to 'all' for searching in all columns
   totalAsteroid: number = 0;
+  isLoading: boolean = true; 
+  loadingProgress: number = 0; 
+
+  @ViewChild('asteroidChartCanvas', { static: true }) asteroidChartCanvas!: ElementRef;
 
 
-
-  ngOnInit() {
-    this.getDataFromServer();
+  async ngOnInit() {
+    await this.getDataFromServer();
+    this.loadingProgress = 100; 
+    this.isLoading = false; 
   }
 
 
@@ -61,10 +68,11 @@ export class AnalyzeComponent implements OnInit {
       }
 
       this.asteroidData = allAsteroids;
-      // console.log(this.asteroidData);
+      this.OldAsteroidData = nasaAsteroidsMonthAgo;
+      // console.log(this.OldAsteroidData);
 
       // Call the function to render the chart after fetching the data
-      this.renderAsteroidsChart(allAsteroids);
+      this.renderAsteroidsChart(this.OldAsteroidData);
 
     } catch (error: any) {
       console.error("Error fetching data:", error.message);
@@ -78,42 +86,54 @@ export class AnalyzeComponent implements OnInit {
     const currentDate = new Date();
     return currentDate.toDateString();
   }
+//    const ctx = document.getElementById('ASTEROIDS') as HTMLCanvasElement;
 
-  renderAsteroidsChart(asteroidsData: any[]) {
-    const labels = asteroidsData.map((asteroid) => asteroid.name);
-    const data = asteroidsData.map((asteroid) => asteroid.absolute_magnitude_h);
+renderAsteroidsChart(asteroidsData: any[]) {
+    // Extract relevant data from the provided asteroidData
+    const formattedDates = asteroidsData.map((asteroid: any) => new Date(asteroid[3]));
 
-    const asteroidsChart = new Chart('ASTEROIDS', {
-      type: 'bar',
+    // Create a scatter plot using Chart.js
+    const ctx = document.getElementById('ASTEROIDS') as HTMLCanvasElement;
+    new Chart(ctx, {
+      type: 'scatter',
       data: {
-        labels: labels,
-        datasets: [{
-          label: 'Distribution of asteroids (Last month)',
-          data: data,
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        }]
+        datasets: [
+          {
+            label: 'Asteroids',
+            data: formattedDates.map(date => ({ x: date, y: 0 })), // Y values can be set as 0 for scatter plots
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
       },
       options: {
         scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Absolute Magnitude (H)'
-            }
-          },
           x: {
+            type: 'time',
+            time: {
+              unit: 'day',
+              tooltipFormat: 'll', // Display date in a readable format
+            },
             title: {
               display: true,
-              text: 'Asteroid name'
-            }
-          }
-        }
-      }
+              text: 'Date',
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Y Axis Label', // Customize the y-axis label
+            },
+          },
+        },
+      },
     });
   }
+
+
+
+  
   onSearch() {
     // Filter the asteroidData based on the search text and selected column
     const searchTerm = this.searchText.toLowerCase();
@@ -129,7 +149,7 @@ export class AnalyzeComponent implements OnInit {
     }
 
     // Call the function to re-render the chart after filtering the data
-    this.renderAsteroidsChart(this.filteredAsteroidData);
+    this.renderAsteroidsChart(this.OldAsteroidData);
   }
 
   doesItemMatchSearch(item: any, searchTerm: string, column?: string): boolean {

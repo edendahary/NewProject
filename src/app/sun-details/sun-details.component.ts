@@ -16,6 +16,8 @@ export class SunDetailsComponent {
   currentState:string | undefined;
   transit:string | undefined;
   transit_altitudeValue:string | undefined;
+  isLoading: boolean = true; 
+  loadingProgress: number = 0; 
 
   SunValues:any[] = [];
   rise_azimuthValue: any;
@@ -23,6 +25,8 @@ export class SunDetailsComponent {
    async ngOnInit() {
     this.allData = await this.getDataFromServer();
     this.getSunspotImage();
+    this.loadingProgress = 100; 
+    this.isLoading = false; 
 
   }
 
@@ -85,7 +89,7 @@ export class SunDetailsComponent {
       parts.shift();
 
       const currentState_1 = parts[0].split(',');
-      var currState_final = currentState_1[0] +" " + parts[1];
+      var currState_final = currentState_1[0] +"\n" + parts[1];
       this.currentState = currState_final;
 
       const altitudeMatch = responseSun.data.value.transit.match(/Max altitude:\s*([\d.]+)°/);

@@ -143,9 +143,9 @@ table.asteroids-table {
 .title {
   font-size: 24px; /* Set the desired font size for the title */
 }
-
-  
-
-
-  
-  
+  .loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Use the full viewport height */
+}
